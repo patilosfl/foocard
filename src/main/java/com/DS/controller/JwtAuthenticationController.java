@@ -19,7 +19,7 @@ import com.DS.model.UserDto;
 import com.DS.model.JwtResponse;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class JwtAuthenticationController {
 
 	@Autowired
@@ -31,13 +31,17 @@ public class JwtAuthenticationController {
 	@Autowired
 	private JWTUserDetailsService userDetailsService;
 
-	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDto authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());		
 		final String userName = authenticationRequest.getUsername();		
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+		System.out.println("load user details");
+		System.out.println(userDetails);
 		final String token = jwtTokenUtil.generateToken(userDetails);
+		System.out.println("token from authenticate controller");
+		System.out.println(token);
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 

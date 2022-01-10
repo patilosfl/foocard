@@ -33,6 +33,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		final String requestTokenHeader = request.getHeader("Authorization");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+		response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers");
+
+		
+		
+		System.out.println("request" + request);
+		System.out.println("requestTokenHeader" + requestTokenHeader);
 
 		String username = null;
 		String jwtToken = null;
@@ -40,13 +50,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		// only the Token
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			jwtToken = requestTokenHeader.substring(7);
+			System.out.println("jwtToken" + jwtToken);
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+				System.out.println("username" + username);
+				
+				
 			} catch (IllegalArgumentException e) {
+				
 				System.out.println("Unable to get JWT Token");
+				
 			} catch (ExpiredJwtException e) {
+				
 				System.out.println("JWT Token has expired");
+				
 			}
+			
 		} else {
 			logger.warn("JWT Token does not begin with Bearer String");
 		}

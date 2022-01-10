@@ -3,6 +3,7 @@ package com.DS.authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+//import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,6 +15,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+//import org.springframework.web.cors.CorsConfiguration;
+//import org.springframework.web.cors.CorsConfigurationSource;
+//import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+//import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -52,16 +58,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
-				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/authenticate","/api/registerPatient").permitAll().
-				// all other requests need to be authenticated
-				anyRequest().authenticated().and().
-				// make sure we use stateless session; session won't be used to
-				// store user's state.
-				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+				/** Don't authenticate this particular request ********/
+				.authorizeRequests().antMatchers("/user/authenticate", "/api/registerPatient", "/api/getAllDoctors").permitAll()
+				/** all other requests need to be authenticated ******/
+				.anyRequest().authenticated()
+				/********************* for CORS *********************/
+				.and().cors()
+				// .configurationSource(corsConfigurationSource())
+				/***
+				 * make sure we use stateless session; session won't be used to store user's
+				 * state.
+				 **/
+				.and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
+
+//	CorsConfigurationSource corsConfigurationSource() {
+//		CorsConfiguration configuration = new CorsConfiguration();
+//		configuration.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.PUT.name(), HttpMethod.POST.name(),
+//				HttpMethod.DELETE.name()));
+////		configuration.addAllowedOrigin("http://localhost:3000");
+////		configuration.addAllowedOrigin("http://localhost:8080");
+//		configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080"));
+//		
+//		List<String> orgns = configuration.getAllowedOrigins();
+//		
+//		System.out.println(orgns);
+//		
+//		
+//
+//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
+//		return source;
+//	}
 }
