@@ -17,17 +17,18 @@ public class JWTUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userDao;
+	public Patient user;
 
 	@Override
 	public UserDetails loadUserByUsername(String useranme) throws UsernameNotFoundException {
 
 		//Patient user = userDao.findByEmail(useranme);
 		
-		Patient user = getUserdetails(useranme);
+		user = getUserdetails(useranme);
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found with username: " + useranme);
 		}
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),new ArrayList<>());
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
 	}
 
 	public Patient getUserdetails(String useranme) {

@@ -1,5 +1,7 @@
 package com.DS.controller;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,15 +36,29 @@ public class JwtAuthenticationController {
 	@RequestMapping(value = "/user/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDto authenticationRequest) throws Exception {
 
-		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());		
-		final String userName = authenticationRequest.getUsername();		
+		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		final String userName = authenticationRequest.getUsername();
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 		System.out.println("load user details");
 		System.out.println(userDetails);
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		System.out.println("token from authenticate controller");
 		System.out.println(token);
-		return ResponseEntity.ok(new JwtResponse(token));
+		System.out.println(userDetailsService.user);
+		System.out.println(userDetailsService.user.getFirstname());
+
+		JwtResponse rest = new JwtResponse(token);
+		System.out.println("  ****************" + rest);
+		System.out.println("  ******getToken*******" + rest.getToken());
+		System.out.println("  *******hashCode*******" + rest.hashCode());
+
+		HashMap<String, String> authResult = new HashMap<>();
+		authResult.put("token", rest.getToken());
+		authResult.put("name", userDetailsService.user.getFirstname());
+
+		return ResponseEntity.ok(authResult);
+
+		// return ResponseEntity.ok(new JwtResponse(token));
 	}
 
 	private void authenticate(String username, String password) throws Exception {
