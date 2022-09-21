@@ -1,31 +1,34 @@
 package com.DS.model;
 
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "hospitals")
 public class Hospital {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+
 	@Column(name = "id")
 	private long id;
 
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "type")
-	private String type;
-
 	@Column(name = "address")
 	private String address;
 
-	@Column(name = "fromTime")
-	private String fromTime;
+	@Column(name = "city")
+	private String city;
 
-	@Column(name = "toTime")
-	private String toTime;
+	@Column(name = "state")
+	private String state;
+
+	@Column(name = "ppn")
+	private String ppn;
 
 	public long getId() {
 		return id;
@@ -43,14 +46,6 @@ public class Hospital {
 		this.name = name;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public String getAddress() {
 		return address;
 	}
@@ -59,32 +54,40 @@ public class Hospital {
 		this.address = address;
 	}
 
-	public String getFromTime() {
-		return fromTime;
+	public String getCity() {
+		return city;
 	}
 
-	public void setFromTime(String fromTime) {
-		this.fromTime = fromTime;
+	public void setCity(String city) {
+		this.city = city;
 	}
 
-	public String getToTime() {
-		return toTime;
+	public String getState() {
+		return state;
 	}
 
-	public void setToTime(String toTime) {
-		this.toTime = toTime;
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getPpn() {
+		return ppn;
+	}
+
+	public void setPpn(String ppn) {
+		this.ppn = ppn;
 	}
 
 	public Hospital() {
 
 	}
 
-	public Hospital(String name, String type, String address, String fromTime, String toTime) {
+	public Hospital(String name, String address, String city, String state, String ppn) {
 		this.name = name;
-		this.type = type;
 		this.address = address;
-		this.fromTime = fromTime;
-		this.toTime = toTime;
+		this.city = city;
+		this.state = state;
+		this.ppn = ppn;
 
 	}
 
